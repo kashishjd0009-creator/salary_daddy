@@ -103,9 +103,8 @@ export function NegotiationForm({
   disabled = false,
 }: Props) {
   const [values, setValues] = useState<NegotiationFormValues>(() => {
-    const { experience: _legacyExperience, ...restInitial } = (
-      initialValues ?? {}
-    ) as Partial<NegotiationFormValues> & { experience?: number }
+    const restInitial = (initialValues ?? {}) as Partial<NegotiationFormValues> &
+      { experience?: number }
     return {
       ...defaultValues,
       ...restInitial,
@@ -132,10 +131,7 @@ export function NegotiationForm({
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
 
   useEffect(() => {
-    if (!isLoading) {
-      setMsgIdx(0)
-      return
-    }
+    if (!isLoading) return
     const t = setInterval(() => {
       setMsgIdx((i) => (i + 1) % LOADING_MESSAGES.length)
     }, 2000)
