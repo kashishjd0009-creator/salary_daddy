@@ -9,8 +9,8 @@ export const FEATURES = {
   },
 
   freeTier: {
-    generationLimit: null as number | null,
-    resetPeriod: "never" as "never" | "daily" | "session",
+    generationLimit: 10 as number | null,
+    resetPeriod: "hourly" as "never" | "daily" | "session" | "hourly",
   },
 
   premium: {

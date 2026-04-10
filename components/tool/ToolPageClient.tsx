@@ -27,12 +27,20 @@ export function ToolPageClient() {
 
   const handleGenerate = useCallback(
     async (body: GenerateRequestBody) => {
-      if (hasReachedLimit) return
+      if (hasReachedLimit) {
+        setError("You have reached your 10 attempts for this hour. Please try again in the next hour.")
+        setPhase("form")
+        return
+      }
       setLastRequest(body)
       setPhase("output")
       setError(null)
       const ok = await generate(body)
-      if (ok) increment()
+      if (ok) {
+        increment()
+      } else {
+        setPhase("form")
+      }
     },
     [generate, hasReachedLimit, increment, setError]
   )

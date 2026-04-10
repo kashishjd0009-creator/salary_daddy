@@ -8,6 +8,7 @@ const STORAGE_KEY = "salarydaddy_free_generations_v1"
 type Stored = {
   count: number
   dayKey?: string
+  hourKey?: string
 }
 
 /** Stable reference — required for useSyncExternalStore server snapshot & unlimited tier */
@@ -36,6 +37,10 @@ function getDayKey(): string {
   return new Date().toISOString().slice(0, 10)
 }
 
+function getHourKey(): string {
+  return new Date().toISOString().slice(0, 13)
+}
+
 function normalizeStored(data: Stored): Stored {
   const limit = FEATURES.freeTier.generationLimit
   const reset = FEATURES.freeTier.resetPeriod
@@ -48,11 +53,17 @@ function normalizeStored(data: Stored): Stored {
     return { count: data.count, dayKey: data.dayKey ?? today }
   }
 
+  if (reset === "hourly") {
+    const hour = getHourKey()
+    if (data.hourKey !== hour) return { count: 0, hourKey: hour }
+    return { count: data.count, hourKey: data.hourKey ?? hour }
+  }
+
   return { count: data.count }
 }
 
 function storedEqual(a: Stored, b: Stored): boolean {
-  return a.count === b.count && a.dayKey === b.dayKey
+  return a.count === b.count && a.dayKey === b.dayKey && a.hourKey === b.hourKey
 }
 
 let clientSnapshotCache: Stored = EMPTY_SNAPSHOT
@@ -104,6 +115,8 @@ export function useGenerationLimit() {
     const next: Stored =
       FEATURES.freeTier.resetPeriod === "daily"
         ? { count: current.count + 1, dayKey: getDayKey() }
+        : FEATURES.freeTier.resetPeriod === "hourly"
+          ? { count: current.count + 1, hourKey: getHourKey() }
         : { count: current.count + 1 }
 
     store.setItem(STORAGE_KEY, JSON.stringify(next))

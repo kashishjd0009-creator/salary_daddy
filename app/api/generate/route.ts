@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
   const { allowed } = checkRateLimit(ip)
   if (!allowed) {
     return Response.json(
-      { error: "Too many requests. Please try again later." },
+      { error: "You have reached your 10 attempts for this hour. Please try again in the next hour." },
       { status: 429, headers: { ...baseHeaders, "Content-Type": "application/json" } }
     )
   }

@@ -17,7 +17,12 @@ export function GenerationLimitBanner() {
         role="alert"
         className="rounded-2xl border border-border bg-surface-elevated p-4 text-sm text-foreground mb-6"
       >
-        <p className="font-medium">You&apos;ve used all your free generations.</p>
+        <p className="font-medium">
+          You&apos;ve reached your hourly free limit ({limit}/{limit} used).
+        </p>
+        <p className="mt-2 text-muted-foreground">
+          You can generate again when your hourly attempts reset.
+        </p>
         {FEATURES.premium.enabled ? (
           <Link
             href="/#pro"
@@ -26,9 +31,7 @@ export function GenerationLimitBanner() {
             Upgrade to Pro
           </Link>
         ) : (
-          <p className="mt-2 text-muted-foreground">
-            Check back later — we may add more free runs in the future.
-          </p>
+          <p className="mt-2 text-muted-foreground">Please try again in the next hour.</p>
         )}
       </div>
     )
@@ -39,10 +42,10 @@ export function GenerationLimitBanner() {
   return (
     <div className="rounded-2xl border border-border bg-surface-elevated p-4 mb-6">
       <p className="text-sm text-foreground mb-2">
-        <span className="font-semibold">{used}</span> of{" "}
-        <span className="font-semibold">{limit}</span> free generations used
+        <span className="font-semibold">{remaining}</span> of{" "}
+        <span className="font-semibold">{limit}</span> attempts remaining this hour
         {remaining !== null && (
-          <span className="text-muted-foreground"> ({remaining} remaining)</span>
+          <span className="text-muted-foreground"> ({used} used)</span>
         )}
       </p>
       <Progress value={pct} className="h-2 bg-border" />
