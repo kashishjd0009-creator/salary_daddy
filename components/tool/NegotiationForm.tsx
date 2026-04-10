@@ -31,6 +31,7 @@ const INDUSTRIES = [
   "Legal",
   "Education",
   "Consulting",
+  "Management",
   "Sales",
   "Design",
   "Engineering",
